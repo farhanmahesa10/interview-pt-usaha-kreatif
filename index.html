@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="xapp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interview Test</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css"
+      rel="stylesheet"
+    />
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script> -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <script type="text/javascript" src="angular.js"></script>
+    <script type="text/javascript" src="data.js"></script>
+    <script type="text/javascript" src="lodash.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+    <style>
+      input[type="range"]::-webkit-slider-thumb {
+        pointer-events: all;
+        width: 24px;
+        height: 24px;
+        -webkit-appearance: none;
+        margin-top: -8px;
+
+        /* @apply w-6 h-6 appearance-none pointer-events-auto; */
+      }
+
+      input[type="range"]::-webkit-slider-runnable-track {
+        background: red;
+        height: 0.5rem;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+
+  <body ng-controller="xctrl">
+    <div class="flex justify-center">
+      <div
+        class="max-w-[1440px] px-[16px] md:px-[32px] lg:px-[54px] xl:px-[112px] mt-10 w-full"
+      >
+        <nav class="w-full flex justify-between border-b">
+          <div
+            class="pr-4 lg:pr-0 lg:w-full lg:max-w-[250px] flex items-center border-r border-gray-200"
+          >
+            <h2 class="text-2xl font-semibold">Shoe.</h2>
+          </div>
+          <div class="p-2 w-full">
+            <div class="flex items-center" ng-click="test()">
+              <label for="simple-search" class="sr-only">Search</label>
+              <div class="relative w-full">
+                <div
+                  class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="w-5 h-5 text-gray-500"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  ng-model="search"
+                  id="simple-search"
+                  class="border border-slate-300 text-sm rounded-lg focus:ring-slate-300 focus:border-slate-300 block w-full pl-10 p-2.5"
+                  placeholder="Enter product name here"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        <div class="w-full flex justify-between">
+          <aside
+            class=" {{!showFilter && 'hidden'}} fixed w-full max-w-screen top-0 z-[999] pr-10 bg-white lg:static lg:block ld:w-full lg:block lg:max-w-[250px] lg:pr-4 flex flex-col gap-4 border-r border-gray-200 min-h-[calc(100vh-100px)] h-full"
+          >
+            <div class="w-full">
+              <div
+                class="flex justify-between border-b py-4 cursor-pointer items-center hover:opacity-70"
+                ng-click="categories.show = !categories.show"
+              >
+                <h3 class="text-xl font-semibold">Categories</h3>
+                <svg
+                  class="w-4 h-4 ml-2 {{categories.show && 'transform  rotate-180'}} transition-all duration-100"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </div>
+              <ul
+                class="flex flex-col gap-4  {{!categories.show ? 'max-h-0  overflow-hidden' : 'max-h-full mt-4'}} transition-all duration-100"
+              >
+                <li ng-repeat="(i,category) in categories.data">
+                  <div class="flex items-center mr-4">
+                    <input
+                      id="category-{{i}}"
+                      type="radio"
+                      ng-checked="{{category.value === choosenCategory}}"
+                      value="{{category.value}}"
+                      ng-click="handleCategoryChange(category.value)"
+                      name="choosenCategory"
+                      n
+                      class="w-4 h-4 text-gray-800 bg-gray-100 border-gray-300 focus:ring-gray-500 cursor-pointer"
+                    />
+                    <label
+                      for="category-{{i}}"
+                      class="ml-2 text-sm font-medium text-gray-900 cursor-pointer hover:opacity-70"
+                    >
+                      {{category.label}}
+                    </label>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="w-full">
+              <div
+                class="flex justify-between border-b border-t py-4 cursor-pointer hover:opacity-70 items-center"
+                ng-click="prices.show=!prices.show"
+              >
+                <h3 class="text-xl font-semibold">Price Range</h3>
+                <svg
+                  class="w-4 h-4 ml-2 {{price.show && 'transform  rotate-180'}} transition-all duration-100"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </div>
+
+              <div
+                class=" flex justify-center items-center {{!prices.show ? 'max-h-0  overflow-hidden' : 'max-h-full mt-4'}} transition-all duration-100"
+              >
+                <div class="relative max-w-xl w-full">
+                  <div>
+                    <input
+                      type="range"
+                      min="{{prices.min}}"
+                      max="{{prices.max}}"
+                      ng-model="prices.minPrice"
+                      ng-change="mintrigger()"
+                      class="absolute appearance-none z-20 opacity-0 h-2 w-full cursor-pointer"
+                    />
+
+                    <input
+                      type="range"
+                      min="{{prices.min}}"
+                      max="{{prices.max}}"
+                      ng-model="prices.maxPrice"
+                      ng-change="maxtrigger()"
+                      class="absolute appearance-none z-20 opacity-0 h-2 w-full cursor-pointer"
+                    />
+
+                    <div class="relative z-10 h-1">
+                      <div
+                        class="absolute z-10 left-0 right-0 bottom-0 top-0 rounded-md bg-gray-200"
+                      ></div>
+
+                      <!-- <div class="absolute z-20 top-0 bottom-0 rounded-md bg-green-300" style="right: {{prices.maxthumb}}%,left: {{prices.minthumb}}%"></div> -->
+                      <div
+                        class="absolute z-20 top-0 bottom-0 rounded-md bg-gray-800"
+                        style="right: {{prices.maxthumb}}%; left:{{prices.minthumb}}%"
+                      ></div>
+
+                      <div
+                        class="absolute z-30 w-4 h-4 top-0 bg-gray-800 rounded-full border border-white -mt-[6px] {{prices.minthumb > 50 && '-ml-4'}}"
+                        style="left: {{prices.minthumb}}%"
+                      ></div>
+
+                      <div
+                        class="absolute z-30 w-4 h-4 top-0 right-0 bg-gray-800 rounded-full border border-white -mt-[6px] {{prices.maxthumb > 50 && '-mr-4'}}"
+                        style="right: {{prices.maxthumb}}%"
+                      ></div>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center py-4">
+                    <span>{{prices.minPrice}}</span>
+                    <span>{{prices.maxPrice}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="w-full">
+              <div
+                class="flex justify-between border-b border-t py-4 cursor-pointer hover:opacity-70 items-center"
+                ng-click="sizes.show=!sizes.show"
+              >
+                <h3 class="text-xl font-semibold">Size</h3>
+                <svg
+                  class="w-4 h-4 ml-2 {{sizes.show && 'transform  rotate-180'}} transition-all duration-100"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </div>
+              <ul
+                class="flex gap-2 w-full  flex-wrap  {{!sizes.show ? 'max-h-0  overflow-hidden' : 'max-h-full mt-4'}} transition-all duration-100"
+              >
+                <li
+                  class="flex items-center"
+                  ng-repeat="(i,size) in sizes.data"
+                >
+                  <input
+                    type="checkbox"
+                    id="size-{{i}}"
+                    value="{{size.name}}"
+                    name="size"
+                    class="hidden peer"
+                    ng-model="size.selected"
+                    ng-change="sizeChanged(size)"
+                  />
+                  <label
+                    for="size-{{i}}"
+                    class="inline-flex items-center justify-center w-10 h-10 font-semibold text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-gray-600 hover:text-gray-600 peer-checked:text-gray-600"
+                  >
+                    {{size.name}}
+                  </label>
+                </li>
+              </ul>
+            </div>
+
+            <div class="w-full mt-4 lg:hidden">
+              <button
+                class="bg-gray-800 text-white w-full p-2 rounded-[4px]"
+                type="button"
+                ng-click="showFilter=false"
+              >
+                Apply
+              </button>
+            </div>
+          </aside>
+          <main class="p-4 w-full">
+            <div class="flex justify-between items-center flex-wrap gap-2">
+              <button
+                ng-click="showFilter=true"
+                type="button"
+                class="lg:hidden border rounded-[4px] flex gap-2 items-center pr-3 cursor-pointer hover:opacity-70"
+              >
+                <div class="flex flex-col gap-1 justify-center w-5 h-4 pl-2">
+                  <div class="w-full h-[2px] bg-gray-400"></div>
+                  <div class="w-full h-[2px] bg-gray-400"></div>
+                  <div class="w-full h-[2px] bg-gray-400"></div>
+                </div>
+                <p class="font-semibold">Filter</p>
+              </button>
+              <div>
+                <h2 class="text-md md:text-xl lg:text-2xl font-semibold">
+                  New Arrivals
+                </h2>
+              </div>
+              <div class="">
+                <button
+                  class="bg-white relative rounded-lg focus:ring-slate-300 hover:opacity-70 font-medium text-xs md:text-sm sm:px-4 py-2.5 text-center inline-flex items-center"
+                  type="button"
+                  ng-click="sortState.show = !sortState.show"
+                >
+                  Sort by {{sortState.active}}
+                  <svg
+                    class="w-4 h-4 ml-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    ></path>
+                  </svg>
+                </button>
+                <!-- Dropdown menu -->
+                <div
+                  class="z-10 bg-white {{!sortState.show && 'hidden'}} divide-y divide-gray-100 rounded-lg shadow w-[150px] absolute"
+                >
+                  <ul
+                    class="py-2 text-sm text-gray-700"
+                    aria-labelledby="dropdownDefaultButton"
+                  >
+                    <li
+                      ng-repeat="sort in sortState.sorts"
+                      ng-click="sortChange(sort)"
+                      class="block px-4 py-2 hover:bg-gray-100 cursor-pointer text-xs md:text-sm {{sortState.active === sort && 'bg-gray-50'}}"
+                    >
+                      {{sort}}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <ul
+              class="grid grid-cols-2 lg:grid-cols-3 gap-4 mt-1 md:mt-2 lg:mt-4"
+            >
+              <li
+                class="w-full border border-gray-200 rounded-[8px] px-2 py-1 md:px-4 md:py-2"
+                ng-repeat="product in displayedProducts"
+              >
+                <div ng-init="product.image = product.images[0]">
+                  <p class="text-gray-400 text-xs md:text-sm">
+                    {{product.category}}
+                  </p>
+                  <h5 class="font-bold truncate text-sm md:text-md">
+                    {{product.name}}
+                  </h5>
+
+                  <img src="{{product.image}}" alt="shoe" class="my-2" />
+                  <div class="flex justify-between py-1">
+                    <p class="text-gray-400 text-sm text-xs md:text-sm">
+                      Price
+                    </p>
+                    <p class="text-gray-400 text-sm text-xs md:text-sm">
+                      Size - {{product.size}}
+                    </p>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <h5 class="font-bold text-xs md:text-sm">
+                      $ {{product.price}}
+                    </h5>
+
+                    <div class="flex gap-2">
+                      <div
+                        class="w-5 h-5 md:w-10 md:h-10 flex justify-center items-center p-1 rounded-[8px] border border-gray-200 cursor-pointer hover:opacity-70"
+                        ng-repeat="image in product.images"
+                        ng-click="product.image=image"
+                      >
+                        <img src="{{image}}" alt="product images" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+
+            <ul
+              class="flex gap-2 w-full  flex-wrap  {{!sizes.show ? 'max-h-0  overflow-hidden' : 'max-h-full mt-4'}} transition-all duration-100"
+            >
+              <li class="flex items-center" ng-repeat="(i,size) in sizes.data">
+                <input
+                  type="checkbox"
+                  id="size-{{i}}"
+                  value="{{size.name}}"
+                  name="size"
+                  class="hidden peer"
+                  ng-model="size.selected"
+                  ng-change="sizeChanged(size)"
+                />
+                <label
+                  for="size-{{i}}"
+                  class="inline-flex items-center justify-center w-10 h-10 font-semibold text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-gray-600 hover:text-gray-600 peer-checked:text-gray-600"
+                >
+                  {{size.name}}
+                </label>
+              </li>
+            </ul>
+          </main>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
