@@ -992,7 +992,7 @@ let products = [
   },
   {
     id: 88,
-    name: " Trek",
+    name: "Trek",
     category: "Lace-Up Shoes",
     price: 6542,
     size: 35,
@@ -1003,7 +1003,7 @@ let products = [
   },
   {
     id: 89,
-    name: " Seeker",
+    name: "Seeker",
     category: "Flip Flaps",
     price: 1276,
     size: 43,
@@ -1014,7 +1014,7 @@ let products = [
   },
   {
     id: 90,
-    name: " Trail",
+    name: "Trail",
     category: "Sneakers",
     price: 2472,
     size: 48,

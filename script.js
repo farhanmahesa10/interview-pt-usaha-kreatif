@@ -10,12 +10,16 @@ app.controller("xctrl", ($scope) => {
     show: false,
     data: sizes,
   };
-  // $scope.displayedProducts = products.slice(0, 9); //ini blm jalan karena function langsung jalan ketika kosong
-  $scope.displayedProducts = products.slice(0, 9); //ini blm jalan karena function langsung jalan ketika kosong
+  $scope.displayedProducts = products.slice(0, 12);
   $scope.choosenCategory = "";
   $scope.selectedSizes = [];
+  $scope.pagination = {
+    activePage: 1,
+    perPage: 12,
+    pages: [],
+  };
   $scope.prices = {
-    show: false,
+    show: true,
     minPrice: 0,
     maxPrice: 10000,
     min: 0,
@@ -43,15 +47,36 @@ app.controller("xctrl", ($scope) => {
           : true)
       );
     });
-    $scope.displayedProducts = _.sortBy(
+    const sortResult = _.sortBy(
       filltered,
       $scope.sortState.active.toLowerCase()
     );
+    // console.log(_.slice(sortResult, 0, 12));
+    // $scope.displayedProducts = sortResult;
+    $scope.displayedProducts = sortResult.slice(
+      $scope.pagination.perPage * $scope.pagination.activePage -
+        $scope.pagination.perPage,
+      $scope.pagination.perPage * $scope.pagination.activePage
+    );
+    $scope.pagination.pages = [];
+    for (
+      let pageNumber = 1;
+      pageNumber <= Math.ceil(sortResult.length / $scope.pagination.perPage);
+      pageNumber++
+    ) {
+      if (Math.ceil(sortResult.length / $scope.pagination.perPage) > 1) {
+        $scope.pagination.pages.push(pageNumber);
+      }
+    }
   };
 
   $scope.$watch("search", (newValue, oldValue) => {
     changeDisplayedProducts();
   });
+  $scope.handleChangePage = (page) => {
+    $scope.pagination.activePage = page;
+    changeDisplayedProducts();
+  };
 
   $scope.handleCategoryChange = (value) => {
     $scope.choosenCategory = value;

@@ -22,14 +22,27 @@
         height: 24px;
         -webkit-appearance: none;
         margin-top: -8px;
+        /* pointer-events: none; */
 
         /* @apply w-6 h-6 appearance-none pointer-events-auto; */
       }
-
+      input[type="range"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        height: 0px;
+      }
       input[type="range"]::-webkit-slider-runnable-track {
-        background: red;
-        height: 0.5rem;
+        height: 0px;
         pointer-events: none;
+      }
+      input[type="range"]::-moz-range-track {
+        height: 0px;
+        pointer-events: none;
+      }
+      input[type="range"]::-moz-range-progress {
+        /* Hide the runnable track specifically in Mozilla Firefox */
+        height: 0px;
       }
     </style>
   </head>
@@ -136,7 +149,7 @@
               >
                 <h3 class="text-xl font-semibold">Price Range</h3>
                 <svg
-                  class="w-4 h-4 ml-2 {{price.show && 'transform  rotate-180'}} transition-all duration-100"
+                  class="w-4 h-4 ml-2 {{prices.show && 'transform  rotate-180'}} transition-all duration-100"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -162,7 +175,7 @@
                       max="{{prices.max}}"
                       ng-model="prices.minPrice"
                       ng-change="mintrigger()"
-                      class="absolute appearance-none z-20 opacity-0 h-2 w-full cursor-pointer"
+                      class="absolute appearance-none z-20 opacity-0 w-full cursor-pointer"
                     />
 
                     <input
@@ -171,7 +184,7 @@
                       max="{{prices.max}}"
                       ng-model="prices.maxPrice"
                       ng-change="maxtrigger()"
-                      class="absolute appearance-none z-20 opacity-0 h-2 w-full cursor-pointer"
+                      class="absolute appearance-none z-20 opacity-0 w-full cursor-pointer"
                     />
 
                     <div class="relative z-10 h-1">
@@ -181,12 +194,12 @@
 
                       <!-- <div class="absolute z-20 top-0 bottom-0 rounded-md bg-green-300" style="right: {{prices.maxthumb}}%,left: {{prices.minthumb}}%"></div> -->
                       <div
-                        class="absolute z-20 top-0 bottom-0 rounded-md bg-gray-800"
+                        class="absolute pointer-events-none z-20 top-0 bottom-0 rounded-md bg-gray-800"
                         style="right: {{prices.maxthumb}}%; left:{{prices.minthumb}}%"
                       ></div>
 
                       <div
-                        class="absolute z-30 w-4 h-4 top-0 bg-gray-800 rounded-full border border-white -mt-[6px] {{prices.minthumb > 50 && '-ml-4'}}"
+                        class="absolute pointer-events-none z-30 w-4 h-4 top-0 bg-gray-800 rounded-full border border-white -mt-[6px] {{prices.minthumb > 50 && '-ml-4'}}"
                         style="left: {{prices.minthumb}}%"
                       ></div>
 
@@ -260,7 +273,7 @@
               </button>
             </div>
           </aside>
-          <main class="p-4 w-full">
+          <main class="p-4 w-full mb-4">
             <div class="flex justify-between items-center flex-wrap gap-2">
               <button
                 ng-click="showFilter=true"
@@ -363,28 +376,21 @@
                 </div>
               </li>
             </ul>
-
-            <ul
-              class="flex gap-2 w-full  flex-wrap  {{!sizes.show ? 'max-h-0  overflow-hidden' : 'max-h-full mt-4'}} transition-all duration-100"
+            <div
+              ng-if="displayedProducts.length < 1"
+              class="flex justify-center py-5 font-semibold italic text-gray-400"
             >
-              <li class="flex items-center" ng-repeat="(i,size) in sizes.data">
-                <input
-                  type="checkbox"
-                  id="size-{{i}}"
-                  value="{{size.name}}"
-                  name="size"
-                  class="hidden peer"
-                  ng-model="size.selected"
-                  ng-change="sizeChanged(size)"
-                />
-                <label
-                  for="size-{{i}}"
-                  class="inline-flex items-center justify-center w-10 h-10 font-semibold text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-gray-600 hover:text-gray-600 peer-checked:text-gray-600"
-                >
-                  {{size.name}}
-                </label>
-              </li>
-            </ul>
+              Sorry, No data found!
+            </div>
+            <div class="my-4 flex gap-2 flex-wrap">
+              <div
+                class="w-10 h-10 flex justify-center items-center border rounded-[8px] hover:opacity-70 cursor-pointer {{page === pagination.activePage && 'bg-gray-50'}}"
+                ng-repeat="page in pagination.pages"
+                ng-click="handleChangePage(page)"
+              >
+                {{page}}
+              </div>
+            </div>
           </main>
         </div>
       </div>
