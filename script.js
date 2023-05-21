@@ -19,7 +19,7 @@ app.controller("xctrl", ($scope) => {
     pages: [],
   };
   $scope.prices = {
-    show: true,
+    show: false,
     minPrice: 0,
     maxPrice: 10000,
     min: 0,
